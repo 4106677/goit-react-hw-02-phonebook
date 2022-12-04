@@ -20,6 +20,8 @@ export class ContactForm extends Component {
     this.props.onSubmit(this.state);
 
     this.setState({ name: '', number: '' });
+
+    e.currentTarget.reset();
   };
 
   render() {
