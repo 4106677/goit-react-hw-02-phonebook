@@ -1,13 +1,13 @@
 import { Component } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
-import { Filter } from './Filter/Filter';
+import Filter from './Filter/Filter';
 import { GlobalStyle } from './GlobalStyles';
 
 import { nanoid } from 'nanoid';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 
-import { Section } from './App.styled';
+import { Section, H1 } from './App.styled';
 
 export class App extends Component {
   state = {
@@ -18,6 +18,12 @@ export class App extends Component {
       { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
+  };
+
+  deleteContact = contactId => {
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter(contact => contact.id !== contactId),
+    }));
   };
 
   addContact = ({ name, number }) => {
@@ -40,15 +46,36 @@ export class App extends Component {
     }
   };
 
+  changeFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+
+  getFilteredContacts = () => {
+    const { filter, contacts } = this.state;
+
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
   render() {
+    const { filter, contacts } = this.state;
+
+    const filteredContacts = this.getFilteredContacts();
+
     return (
       <Section>
-        <h1>Phonebook</h1>
+        <H1>Phonebook</H1>
         <ContactForm onSubmit={this.addContact} />
 
         <h2>Contacts</h2>
-        <Filter />
-        <ContactList contacts={this.state.contacts} />
+        <Filter value={filter} onChange={this.changeFilter} />
+        <ContactList
+          contacts={filteredContacts}
+          onDelete={this.deleteContact}
+        />
         <GlobalStyle />
       </Section>
     );
