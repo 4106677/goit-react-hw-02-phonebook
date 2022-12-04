@@ -1,5 +1,7 @@
 import { Box, Contact, Button } from './ContactList.styled';
 
+import PropTypes from 'prop-types';
+
 export const ContactList = ({ contacts, onDelete }) => {
   return (
     <Box>
@@ -13,4 +15,15 @@ export const ContactList = ({ contacts, onDelete }) => {
       ))}
     </Box>
   );
+};
+
+ContactList.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ),
+  onDelete: PropTypes.func.isRequired,
 };
